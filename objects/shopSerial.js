@@ -3,7 +3,7 @@ exports.sync = function (req, res) {
     tp.setConnectionConfig(require(`${__dirname}/../../.config/www/mssql.json`));
     tp.sql(`EXEC Firebase..sp_ShopSerialSync`).execute()
     .then(function (results) {
-        res.send(results);
+        res.send('OK');
     }).fail(function(err) {
         res.send(err);
     });
