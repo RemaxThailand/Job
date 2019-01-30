@@ -22,7 +22,7 @@ app.get('*', function(req, res) {
     tp.setConnectionConfig(require(`${__dirname}/../.config/www/mssql.json`));
     tp.sql(`SELECT GETDATE() xxx`).execute()
     .then(function (results) {
-        console.log(results);
+        res.json(results);
     });
 });
 
