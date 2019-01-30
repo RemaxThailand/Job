@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/RemaxThailand/Job#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "firebase-admin": "^6.5.1",
+    "firebase-functions": "^2.1.0",
+    "tedious-promises": "^0.4.1"
   }
 }
