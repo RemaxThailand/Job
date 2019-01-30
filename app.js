@@ -14,8 +14,15 @@ try {
 global.db = admin.database();
 
 app.get('*', function(req, res) {
-    db.ref(`serial/TH/0001/stock/190100000112615`).once('value', function (snapshot) {
+    /*db.ref(`serial/TH/0001/stock/190100000112615`).once('value', function (snapshot) {
         res.json(snapshot.val());
+    });*/
+    
+    let tp = require('tedious-promises');
+    tp.setConnectionConfig(require(`${__dirname}/../.config/www/mssql.json`));
+    tp.sql(`SELECT GETDATE() xxx`).execute()
+    .then(function (results) {
+        console.log(results);
     });
 });
 
