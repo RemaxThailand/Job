@@ -14,16 +14,18 @@ try {
 global.db = admin.database();
 
 app.get('*', function(req, res) {
-    /*db.ref(`serial/TH/0001/stock/190100000112615`).once('value', function (snapshot) {
-        res.json(snapshot.val());
-    });*/
-    
-    let tp = require('tedious-promises');
-    tp.setConnectionConfig(require(`${__dirname}/../.config/www/mssql.json`));
-    tp.sql(`SELECT GETDATE() xxx`).execute()
-    .then(function (results) {
-        res.json(results);
-    });
+	res.header('Access-Control-Allow-Origin', '*');
+
+	var url = req.url.split('/');
+	url = url.filter(function(n){ return n !== ''; });
+	if ( url.length >= 2 ) {
+        try {
+            return eval(`require('./objects/${url[0]}').${url[1]}(req, res)`);
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: { message: `Action ${url[0]} > ${url[1]} is not implemented` } }
+        }
+    }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
