@@ -32,11 +32,12 @@ function deleteData(req, res) {
                         console.log(`Delete Serial ${result.id} Error (${error})`);
                     } else {
                         arr.push(`'${result.id}-${result.product}-${result.shop}'`);
-                        console.log(`Delete Serial ${result.id} Success (${success}/${all})`);
+                        //console.log(`Delete Serial ${result.id} Success (${success}/${all})`);
                     }
                     if (success >= all) {
                         msg.delete = { success: true, result: arr.toString()};
                         tp.sql(`DELETE FROM Firebase..ShopSerial WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
+                        console.log(msg.delete);
                         setTimeout(function () {
                             updateData(req, res, msg);
                         }, 1000);
@@ -45,10 +46,12 @@ function deleteData(req, res) {
             });
         } else {
             msg.delete = 'No Delete Data';
+            console.log(msg.delete);
             updateData(req, res, msg);
         }
     }).fail(function (err) {
         msg.delete = err;
+        console.log(msg.delete);
         updateData(req, res, msg);
     });
 }
@@ -73,26 +76,31 @@ function updateData(req, res, msg) {
                     } 
                     else {
                         arr.push(`'${result.id}-${result.product}-${result.shop}'`);
-                        console.log(`Update Serial ${result.poId} Success (${success}/${all})`);
+                        //console.log(`Update Serial ${result.id} Success (${success}/${all})`);
                     }
                     if(success >= all) {
                         msg.update = { success: true, result: arr.toString()};
+                        //msg.update.sql = `UPDATE Firebase..ShopSerial SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`;
                         res.send(msg);
                         tp.sql(`UPDATE Firebase..ShopSerial SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
-                        setTimeout(function() {
-                            process.exit(1);
-                        }, 10000);
+                        console.log(msg.update);
+                        /*if(arr.length == 2000) {
+                            setTimeout(function () {
+                                deleteData(req, res);
+                            }, 20000);
+                        }*/
+                        return true;
                     }
                 })
             });
         } else {
             msg.update = 'No Update Data';
             res.send(msg);
-            process.exit(1);
+            return true;
         }
     }).fail(function (err) {
         msg.update = err;
         res.send(msg);
-        process.exit(1);
+        return true;
     });
 }
