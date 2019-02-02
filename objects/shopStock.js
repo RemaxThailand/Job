@@ -57,7 +57,7 @@ function updateData(req, res, msg) {
             results.forEach(result => {
                 //db.ref(`po/TH/0001/info/${result.id}/id`).set(result.id);
                 db.ref(`product/TH/${result.shop}/stock/${result.product}`).update({
-                    product: result.product
+                    qty: result.qty
                 }, function (error) {
                     success++;
                     if (error) {
