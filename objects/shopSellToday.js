@@ -1,7 +1,7 @@
 exports.firebaseUpdate = function (req, res) {
 
     var secondary = firebase.initializeApp({
-        credential: admin.credential.cert(require(`${__dirname}/../.config/www/credential-powerbolt-shop.json`)),
+        credential: admin.credential.cert(require(`${__dirname}/../../.config/www/credential-powerbolt-shop.json`)),
         databaseURL: 'https://powerbolt-shop.firebaseio.com'
     }, "secondary");
 
