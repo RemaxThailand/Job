@@ -1,6 +1,8 @@
 exports.firebaseUpdate = function (req, res) {
 
-    var secondary = firebase.initializeApp({
+    const admin = require('firebase-admin');
+
+    var secondary = admin.initializeApp({
         credential: admin.credential.cert(require(`${__dirname}/../../.config/www/credential-powerbolt-shop.json`)),
         databaseURL: 'https://powerbolt-shop.firebaseio.com'
     }, "secondary");
@@ -33,7 +35,7 @@ function deleteData(req, res, db2) {
                     if (success >= all) {
                         msg.delete = { success: true, result: arr.toString()};
                         tp.sql(`DELETE FROM Firebase..ShopSellToday WHERE shop IN (${arr.toString()})`).execute();
-                        console.log(msg.delete);
+                        //console.log(msg.delete);
                         setTimeout(function () {
                             updateData(req, res, msg, db2);
                         }, 1000);
@@ -42,12 +44,12 @@ function deleteData(req, res, db2) {
             });
         } else {
             msg.delete = 'No Delete Data';
-            console.log(msg.delete);
+            //console.log(msg.delete);
             updateData(req, res, msg, db2);
         }
     }).fail(function (err) {
         msg.delete = err;
-        console.log(msg.delete);
+        //console.log(msg.delete);
         updateData(req, res, msg, db2);
     });
 }
@@ -61,6 +63,7 @@ function updateData(req, res, msg, db2) {
         if (all > 0) {
             let success = 0;
             let arr = [];
+            let now = new Date();
             results.forEach(result => {
                 //console.log(`shop/info/${result.shop}/report/sell/${now.getFullYear()}/${now.getMonth()+1}/day/${now.getDate()}/sell = ${result.sell}`);
                 db2.ref(`shop/info/${result.shop}/report/sell/${now.getFullYear()}/${now.getMonth()+1}/day/${now.getDate()}/sell`).set(
@@ -78,7 +81,7 @@ function updateData(req, res, msg, db2) {
                         msg.update = { success: true, result: arr.toString()};
                         res.send(msg);
                         tp.sql(`UPDATE Firebase..ShopSellToday SET isSync = 1, syncDate = GETDATE() WHERE shop IN (${arr.toString()})`).execute();
-                        console.log(msg.update);
+                        //console.log(msg.update);
                         return true;
                     }
                 })
@@ -86,11 +89,13 @@ function updateData(req, res, msg, db2) {
         } else {
             msg.update = 'No Update Data';
             res.send(msg);
+            //console.log(msg.update);
             return true;
         }
     }).fail(function (err) {
         msg.update = err;
         res.send(msg);
+        //console.log(msg.update);
         return true;
     });
 }
