@@ -13,7 +13,7 @@ try {
 
 try {
     var secondary = admin.initializeApp({
-        credential: admin.credential.cert(require(`${__dirname}/../../.config/www/credential-powerbolt-shop.json`)),
+        credential: admin.credential.cert(require(`${__dirname}/../.config/www/credential-powerbolt-shop.json`)),
         databaseURL: 'https://powerbolt-shop.firebaseio.com'
     }, "secondary");
     global.db2 = secondary.database();

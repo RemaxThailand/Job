@@ -1,4 +1,14 @@
 exports.firebaseUpdate = function (req, res) {
+
+    if(typeof db2 === 'undefined'){
+        const admin = require('firebase-admin');
+        var secondary = admin.initializeApp({
+            credential: admin.credential.cert(require(`${__dirname}/../../.config/www/credential-powerbolt-shop.json`)),
+            databaseURL: 'https://powerbolt-shop.firebaseio.com'
+        }, "secondary");
+        global.db2 = secondary.database(); 
+    }
+    
     deleteData(req, res);
 };
 
