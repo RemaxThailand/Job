@@ -11,6 +11,17 @@ try {
     });
 } catch (err) {}
 
+try {
+    var secondary = admin.initializeApp({
+        credential: admin.credential.cert(require(`${__dirname}/../../.config/www/credential-powerbolt-shop.json`)),
+        databaseURL: 'https://powerbolt-shop.firebaseio.com'
+    }, "secondary");
+    global.db2 = secondary.database();
+
+} catch (err) {}
+
+
+
 global.db = admin.database();
 
 app.get('*', function(req, res) {

@@ -1,16 +1,8 @@
 exports.firebaseUpdate = function (req, res) {
-
-    const admin = require('firebase-admin');
-
-    var secondary = admin.initializeApp({
-        credential: admin.credential.cert(require(`${__dirname}/../../.config/www/credential-powerbolt-shop.json`)),
-        databaseURL: 'https://powerbolt-shop.firebaseio.com'
-    }, "secondary");
-
-    deleteData(req, res, secondary.database());
+    deleteData(req, res);
 };
 
-function deleteData(req, res, db2) {
+function deleteData(req, res) {
     let msg = {
         delete: {},
         update: {}
@@ -37,7 +29,7 @@ function deleteData(req, res, db2) {
                         tp.sql(`DELETE FROM Firebase..ShopSellToday WHERE shop IN (${arr.toString()})`).execute();
                         //console.log(msg.delete);
                         setTimeout(function () {
-                            updateData(req, res, msg, db2);
+                            updateData(req, res, msg);
                         }, 1000);
                     }
                 })
@@ -45,17 +37,17 @@ function deleteData(req, res, db2) {
         } else {
             msg.delete = 'No Delete Data';
             //console.log(msg.delete);
-            updateData(req, res, msg, db2);
+            updateData(req, res, msg);
         }
     }).fail(function (err) {
         msg.delete = err;
         //console.log(msg.delete);
-        updateData(req, res, msg, db2);
+        updateData(req, res, msg);
     });
 }
 
 
-function updateData(req, res, msg, db2) {
+function updateData(req, res, msg) {
     let tp = require('tedious-promises');
     tp.setConnectionConfig(require(`${__dirname}/../../.config/www/mssql.json`));
     tp.sql(`EXEC Firebase..sp_ShopSellTodaySyncData 'update'`).execute().then(function (results) {
