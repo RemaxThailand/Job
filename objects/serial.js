@@ -26,7 +26,7 @@ function deleteData(req, res) {
                     }
                     if (success >= all) {
                         msg.delete = { success: true, result: arr.toString()};
-                        tp.sql(`DELETE FROM Firebase..Serial WHERE serial IN (${arr.toString()})`).execute();
+                        tp.sql(`DELETE FROM Firebase..Serial WHERE id IN (${arr.toString()})`).execute();
                         console.log(msg.delete);
                         setTimeout(function () {
                             updateData(req, res, msg);
@@ -77,7 +77,7 @@ function updateData(req, res, msg) {
                     if(success >= all) {
                         msg.update = { success: true, result: arr.toString()};
                         res.send(msg);
-                        tp.sql(`UPDATE Firebase..Serial SET isSync = 1, syncDate = GETDATE() WHERE serial IN (${arr.toString()})`).execute();
+                        tp.sql(`UPDATE Firebase..Serial SET isSync = 1, syncDate = GETDATE() WHERE id IN (${arr.toString()})`).execute();
                         console.log(msg.update);
                         return true;
                     }
