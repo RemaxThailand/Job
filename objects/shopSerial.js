@@ -1,7 +1,7 @@
 exports.sync = function (req, res) {
     let tp = require('tedious-promises');
     tp.setConnectionConfig(require(`${__dirname}/../../.config/www/mssql.json`));
-    tp.sql(`EXEC Firebase..sp_ShopSerialSync`).execute()
+    tp.sql(`EXEC Firebase..sp_ShopSerialStockSync`).execute()
     .then(function (results) {
         res.send('OK');
     }).fail(function(err) {
@@ -20,7 +20,7 @@ function deleteData(req, res) {
     }
     let tp = require('tedious-promises');
     tp.setConnectionConfig(require(`${__dirname}/../../.config/www/mssql.json`));
-    tp.sql(`EXEC Firebase..sp_ShopSerialSyncData 'delete'`).execute().then(function (results) {
+    tp.sql(`EXEC Firebase..sp_ShopSerialStockSyncData 'delete'`).execute().then(function (results) {
         let all = results.length;
         if (all > 0) {
             let success = 0;
@@ -36,7 +36,7 @@ function deleteData(req, res) {
                     }
                     if (success >= all) {
                         msg.delete = { success: true, result: arr.toString()};
-                        tp.sql(`DELETE FROM Firebase..ShopSerial WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
+                        tp.sql(`DELETE FROM Firebase..ShopSerialStock WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
                         console.log(msg.delete);
                         setTimeout(function () {
                             updateData(req, res, msg);
@@ -60,7 +60,7 @@ function deleteData(req, res) {
 function updateData(req, res, msg) {
     let tp = require('tedious-promises');
     tp.setConnectionConfig(require(`${__dirname}/../../.config/www/mssql.json`));
-    tp.sql(`EXEC Firebase..sp_ShopSerialSyncData 'update'`).execute().then(function (results) {
+    tp.sql(`EXEC Firebase..sp_ShopSerialStockSyncData 'update'`).execute().then(function (results) {
         let all = results.length;
         if (all > 0) {
             let success = 0;
@@ -80,9 +80,9 @@ function updateData(req, res, msg) {
                     }
                     if(success >= all) {
                         msg.update = { success: true, result: arr.toString()};
-                        //msg.update.sql = `UPDATE Firebase..ShopSerial SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`;
+                        //msg.update.sql = `UPDATE Firebase..ShopSerialStock SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`;
                         res.send(msg);
-                        tp.sql(`UPDATE Firebase..ShopSerial SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
+                        tp.sql(`UPDATE Firebase..ShopSerialStock SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
                         console.log(msg.update);
                         /*if(arr.length == 2000) {
                             setTimeout(function () {
