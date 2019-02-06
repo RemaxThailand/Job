@@ -198,7 +198,8 @@ function updateDataSold(req, res, msg) {
                         //console.log(`Update Serial ${result.id} Success (${success}/${all})`);
                     }
                     if(success >= all) {
-                        msg.update = { success: true, result: arr.toString()};
+                        //msg.update = { success: true, result: arr.toString()};
+                        msg.update = { success: true };
                         //msg.update.sql = `UPDATE Firebase..ShopSerialStock SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`;
                         res.send(msg);
                         tp.sql(`UPDATE Firebase..ShopSerialSold SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
