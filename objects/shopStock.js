@@ -68,7 +68,8 @@ function updateData(req, res, msg) {
                         //console.log(`Update Serial ${result.id} Success (${success}/${all})`);
                     }
                     if(success >= all) {
-                        msg.update = { success: true, result: arr.toString()};
+                        //msg.update = { success: true, result: arr.toString()};
+                        msg.update = { success: true };
                         res.send(msg);
                         tp.sql(`UPDATE Firebase..ShopStock SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(shop,'-', product) IN (${arr.toString()})`).execute();
                         console.log(msg.update);
