@@ -174,9 +174,21 @@ function updateDataSold(req, res, msg) {
             let arr = [];
             results.forEach(result => {
                 //db.ref(`po/TH/0001/info/${result.id}/id`).set(result.id);
-                db.ref(`serial/TH/${result.shop}/sold/${result.id}`).update({
-                    product: result.product
-                }, function (error) {
+                let json = {
+                    orderNo: result.orderNo,
+                    receivedBy: result.receivedBy,
+                    receivedDate: result.receivedDate,
+                    cost: result.cost%parseInt(result.cost) == 0.00 ? parseInt(result.cost) : result.cost,
+                    sellPrice: result.sellPrice%parseInt(result.sellPrice) == 0.00 ? parseInt(result.sellPrice) : result.sellPrice,
+                    docNo: result.docNo,
+                    customer: result.customer,
+                    sellNo: result.sellNo,
+                    sellBy: result.sellBy,
+                    sellDate: result.sellDate
+                }
+                if(result.operationCost != null) json.operationCost = result.operationCost;
+
+                db.ref(`serial/TH/${result.shop}/sold/${result.id}`).update(json, function (error) {
                     success++;
                     if (error) {
                         console.log(`Update Serial ${result.id} Error (${error})`);
@@ -190,7 +202,7 @@ function updateDataSold(req, res, msg) {
                         //msg.update.sql = `UPDATE Firebase..ShopSerialStock SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`;
                         res.send(msg);
                         tp.sql(`UPDATE Firebase..ShopSerialSold SET isSync = 1, syncDate = GETDATE() WHERE CONCAT(id,'-', product,'-', shop) IN (${arr.toString()})`).execute();
-                        console.log(msg.update);
+                        //console.log(msg.update);
                         /*if(arr.length == 2000) {
                             setTimeout(function () {
                                 deleteData(req, res);
