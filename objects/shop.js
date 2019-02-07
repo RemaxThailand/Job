@@ -15,7 +15,7 @@ function deleteData(req, res) {
             let success = 0;
             let arr = [];
             results.forEach(result => {
-                db.ref(`shop/info/${result.id}`).remove(function (error) {
+                db.ref(`shop/TH/info/${result.id}`).remove(function (error) {
                     success++;
                     if (error) {
                         console.log(`Delete Shop ID ${result.id} Error (${error})`);
@@ -67,7 +67,7 @@ function updateData(req, res, msg) {
                     province: result.province
                 }
 
-                db.ref(`shop/info/${result.id}`).update(json, function (error) {
+                db.ref(`shop/TH/info/${result.id}`).update(json, function (error) {
                     success++;
                     if (error) {
                         console.log(`Update Shop ID ${result.id} Error (${error})`);
